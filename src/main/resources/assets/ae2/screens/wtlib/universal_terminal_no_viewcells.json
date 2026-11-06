@@ -31,9 +31,19 @@
       "top": 0
     },
     "upgrades": {
+      "$comment": "Replaced by scrollingUpgrades",
+      "left": -9999,
+      "top": -9999
+    },
+    "scrollingUpgrades": {
       "$comment": "The upgrade panel found on some screens",
       "right": -2,
       "top": 33
+    },
+    "upgradeScrollbar": {
+      "$comment": "Positioned by the upgrade panel",
+      "left": 0,
+      "top": 0
     },
     "toolbox": {
       "$comment": "The toolbox found on some screens",

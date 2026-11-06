@@ -4,6 +4,7 @@
     "ae2:wireless_crafting_terminal",
     "ae2wtlib:wireless_pattern_encoding_terminal",
     "ae2wtlib:wireless_pattern_access_terminal",
+    "ae2wtlib:wireless_filter_terminal",
     "ae2wtlib:wireless_universal_terminal"
   ]
 }

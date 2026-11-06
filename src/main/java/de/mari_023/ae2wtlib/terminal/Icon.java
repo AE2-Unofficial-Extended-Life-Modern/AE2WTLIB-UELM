@@ -20,6 +20,13 @@ public record Icon(int x, int y, int width, int height, Texture texture) {
     public static final Icon MAGNET_FILTER = new Icon(0, 0);
     public static final Icon TRASH = new Icon(0, 32);
 
+    public static final Icon UPGRADE_BACKGROUND_TOP = new Icon(90, 0, 32, 25);
+    public static final Icon UPGRADE_BACKGROUND_MIDDLE = new Icon(90, 25, 32, 18);
+    public static final Icon UPGRADE_BACKGROUND_BOTTOM = new Icon(90, 43, 32, 25);
+    public static final Icon UPGRADE_BACKGROUND_SCROLLING_TOP = new Icon(48, 0, 42, 25);
+    public static final Icon UPGRADE_BACKGROUND_SCROLLING_MIDDLE = new Icon(48, 25, 42, 18);
+    public static final Icon UPGRADE_BACKGROUND_SCROLLING_BOTTOM = new Icon(48, 43, 42, 25);
+
     private Icon(int x, int y) {
         this(x, y, 16, 16);
     }

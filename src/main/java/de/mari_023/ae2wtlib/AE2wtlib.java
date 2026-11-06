@@ -9,6 +9,7 @@ import de.mari_023.ae2wtlib.hotkeys.StowHotkeyAction;
 import de.mari_023.ae2wtlib.networking.ServerNetworkManager;
 import de.mari_023.ae2wtlib.networking.c2s.CycleTerminalPacket;
 import de.mari_023.ae2wtlib.networking.c2s.PickBlockPacket;
+import de.mari_023.ae2wtlib.networking.c2s.SelectTerminalPacket;
 import de.mari_023.ae2wtlib.networking.c2s.TerminalSettingsPacket;
 import de.mari_023.ae2wtlib.terminal.IUniversalWirelessTerminalItem;
 import de.mari_023.ae2wtlib.wat.ItemWAT;
@@ -21,6 +22,9 @@ import de.mari_023.ae2wtlib.wct.magnet_card.config.MagnetMenu;
 import de.mari_023.ae2wtlib.wet.ItemWET;
 import de.mari_023.ae2wtlib.wet.WETMenu;
 import de.mari_023.ae2wtlib.wet.WETMenuHost;
+import de.mari_023.ae2wtlib.wft.ItemWFT;
+import de.mari_023.ae2wtlib.wft.WFTMenu;
+import de.mari_023.ae2wtlib.wft.WFTMenuHost;
 import de.mari_023.ae2wtlib.wut.ItemWUT;
 import de.mari_023.ae2wtlib.wut.WUTHandler;
 import de.mari_023.ae2wtlib.wut.recipe.Combine;
@@ -42,6 +46,7 @@ public class AE2wtlib {
 
     public static ItemWET PATTERN_ENCODING_TERMINAL;
     public static ItemWAT PATTERN_ACCESS_TERMINAL;
+    public static ItemWFT FILTER_TERMINAL;
     public static ItemWUT UNIVERSAL_TERMINAL;
 
     public static Item QUANTUM_BRIDGE_CARD;
@@ -58,11 +63,13 @@ public class AE2wtlib {
                 PATTERN_ENCODING_TERMINAL);
         WUTHandler.addTerminal("pattern_access", PATTERN_ACCESS_TERMINAL::tryOpen, WATMenuHost::new, WATMenu.TYPE,
                 PATTERN_ACCESS_TERMINAL);
+        WUTHandler.addTerminal("filter", FILTER_TERMINAL::tryOpen, WFTMenuHost::new, WFTMenu.TYPE, FILTER_TERMINAL);
 
         Platform.registerRecipe(UpgradeSerializer.NAME, Upgrade.serializer = new UpgradeSerializer());
         Platform.registerRecipe(CombineSerializer.NAME, Combine.serializer = new CombineSerializer());
 
         ServerNetworkManager.registerServerBoundPacket(CycleTerminalPacket.NAME, CycleTerminalPacket::new);
+        ServerNetworkManager.registerServerBoundPacket(SelectTerminalPacket.NAME, SelectTerminalPacket::new);
         ServerNetworkManager.registerServerBoundPacket(PickBlockPacket.NAME, PickBlockPacket::new);
         ServerNetworkManager.registerServerBoundPacket(TerminalSettingsPacket.NAME, TerminalSettingsPacket::new);
         HotkeyActions.register(new RestockHotkeyAction(), "ae2wtlib_restock");
@@ -79,6 +86,7 @@ public class AE2wtlib {
     public static void createItems() {
         PATTERN_ENCODING_TERMINAL = new ItemWET();
         PATTERN_ACCESS_TERMINAL = new ItemWAT();
+        FILTER_TERMINAL = new ItemWFT();
         UNIVERSAL_TERMINAL = new ItemWUT();
         QUANTUM_BRIDGE_CARD = Upgrades
                 .createUpgradeCardItem(new Item.Properties().stacksTo(1));
@@ -88,10 +96,12 @@ public class AE2wtlib {
         Platform.registerItem("magnet_card", MAGNET_CARD);
         Platform.registerItem("wireless_pattern_encoding_terminal", PATTERN_ENCODING_TERMINAL);
         Platform.registerItem("wireless_pattern_access_terminal", PATTERN_ACCESS_TERMINAL);
+        Platform.registerItem("wireless_filter_terminal", FILTER_TERMINAL);
         Platform.registerItem("wireless_universal_terminal", UNIVERSAL_TERMINAL);
 
         GridLinkables.register(PATTERN_ENCODING_TERMINAL, WirelessTerminalItem.LINKABLE_HANDLER);
         GridLinkables.register(PATTERN_ACCESS_TERMINAL, WirelessTerminalItem.LINKABLE_HANDLER);
+        GridLinkables.register(FILTER_TERMINAL, WirelessTerminalItem.LINKABLE_HANDLER);
         GridLinkables.register(UNIVERSAL_TERMINAL, WirelessTerminalItem.LINKABLE_HANDLER);
     }
 
@@ -99,6 +109,7 @@ public class AE2wtlib {
         AE2WTLibCreativeTab.addTerminal(AEItems.WIRELESS_CRAFTING_TERMINAL.asItem());
         AE2WTLibCreativeTab.addTerminal(PATTERN_ENCODING_TERMINAL);
         AE2WTLibCreativeTab.addTerminal(PATTERN_ACCESS_TERMINAL);
+        AE2WTLibCreativeTab.addTerminal(FILTER_TERMINAL);
         AE2WTLibCreativeTab.addTerminal(UNIVERSAL_TERMINAL);
         AE2WTLibCreativeTab.add(QUANTUM_BRIDGE_CARD);
         AE2WTLibCreativeTab.add(MAGNET_CARD);
@@ -107,6 +118,7 @@ public class AE2wtlib {
     static void registerMenus() {
         Platform.registerMenuType(WCTMenu.ID, WCTMenu.TYPE);
         Platform.registerMenuType(WATMenu.ID, WATMenu.TYPE);
+        Platform.registerMenuType(WFTMenu.ID, WFTMenu.TYPE);
         Platform.registerMenuType(WETMenu.ID, WETMenu.TYPE);
         Platform.registerMenuType(MagnetMenu.ID, MagnetMenu.TYPE);
         Platform.registerMenuType(TrashMenu.ID, TrashMenu.TYPE);

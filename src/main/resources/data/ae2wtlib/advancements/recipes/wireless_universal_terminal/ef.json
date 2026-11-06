@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "ae2wtlib:wireless_universal_terminal/ef"
+    ]
+  },
+  "criteria": {
+    "has_a": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2wtlib:wireless_pattern_encoding_terminal"
+          }
+        ]
+      }
+    },
+    "has_b": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2wtlib:wireless_filter_terminal"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "ae2wtlib:wireless_universal_terminal/ef"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_a",
+      "has_b",
+      "has_the_recipe"
+    ]
+  ]
+}

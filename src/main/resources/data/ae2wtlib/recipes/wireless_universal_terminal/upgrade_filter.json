@@ -1,0 +1,7 @@
+{
+  "type": "ae2wtlib:upgrade",
+  "terminal": {
+    "item": "ae2wtlib:wireless_filter_terminal"
+  },
+  "terminalName": "filter"
+}

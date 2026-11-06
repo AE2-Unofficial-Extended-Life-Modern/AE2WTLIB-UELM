@@ -9,12 +9,15 @@ import net.minecraft.world.entity.player.Inventory;
 import de.mari_023.ae2wtlib.TextConstants;
 import de.mari_023.ae2wtlib.terminal.Icon;
 import de.mari_023.ae2wtlib.terminal.IconButton;
-import de.mari_023.ae2wtlib.wut.CycleTerminalButton;
+import de.mari_023.ae2wtlib.terminal.ScrollingUpgradesPanel;
+import de.mari_023.ae2wtlib.terminal.WTMenuHost;
 import de.mari_023.ae2wtlib.wut.IUniversalTerminalCapable;
+import de.mari_023.ae2wtlib.wut.TerminalSelectionButton;
 
 import appeng.client.gui.me.items.CraftingTermScreen;
 import appeng.client.gui.style.ScreenStyle;
 import appeng.client.gui.widgets.BackgroundPanel;
+import appeng.menu.SlotSemantics;
 
 public class WCTScreen extends CraftingTermScreen<WCTMenu> implements IUniversalTerminalCapable {
 
@@ -23,12 +26,12 @@ public class WCTScreen extends CraftingTermScreen<WCTMenu> implements IUniversal
     public WCTScreen(WCTMenu container, Inventory playerInventory, Component title, ScreenStyle style) {
         super(container, playerInventory, title, style);
         if (getMenu().isWUT())
-            addToLeftToolbar(new CycleTerminalButton(btn -> cycleTerminal()));
+            addToLeftToolbar(new TerminalSelectionButton((WTMenuHost) getMenu().getHost(), this::storeState));
 
         IconButton wirelessTerminalSettingsButton = new IconButton(
                 btn -> switchToScreen(new WirelessTerminalSettingsScreen(this)), Icon.MAGNET);
         widgets.add("wirelessTerminalSettingsButton", wirelessTerminalSettingsButton);
-        wirelessTerminalSettingsButton.setMessage(TextConstants.MAGNET);
+        wirelessTerminalSettingsButton.setMessage(TextConstants.TERMINAL_SETTINGS);
 
         magnetCardMenuButton = new IconButton(btn -> getMenu().openMagnetMenu(), Icon.MAGNET_FILTER);
         widgets.add("magnetCardMenuButton", magnetCardMenuButton);
@@ -39,6 +42,8 @@ public class WCTScreen extends CraftingTermScreen<WCTMenu> implements IUniversal
         trashButton.setMessage(TextConstants.TRASH);
 
         widgets.add("player", new PlayerEntityWidget(Objects.requireNonNull(Minecraft.getInstance().player)));
+        widgets.add("scrollingUpgrades", new ScrollingUpgradesPanel(getMenu().getSlots(SlotSemantics.UPGRADE),
+                getMenu().getHost(), widgets));
         widgets.add("singularityBackground", new BackgroundPanel(style.getImage("singularityBackground")));
     }
 

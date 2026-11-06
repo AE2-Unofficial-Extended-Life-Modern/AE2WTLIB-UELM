@@ -1,0 +1,7 @@
+{
+  "$schema": "schema.json",
+  "includes": [
+    "../terminals/filter_terminal.json",
+    "universal_terminal_no_viewcells.json"
+  ]
+}

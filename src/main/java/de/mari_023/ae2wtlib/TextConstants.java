@@ -49,8 +49,14 @@ public final class TextConstants {
             .literal("This terminal does not contain any other Terminals");
     public static final Component CYCLE_TOOLTIP = Component.translatable("gui.ae2wtlib.cycle_terminal.desc");
 
+    public static MutableComponent currentTerminal(Component terminal) {
+        return Component.translatable("gui.ae2wtlib.current_terminal", terminal);
+    }
+
     public static final MutableComponent TRASH = Component.translatable("gui.ae2wtlib.trash");
 
+    public static final Component TERMINAL_SETTINGS = Component
+            .translatable("gui.ae2wtlib.wireless_terminal_settings_title");
     public static final Component MAGNET_FILTER = Component.translatable("gui.ae2wtlib.Magnet");
 
     private static final Component WHITELIST = Component.translatable("gui.ae2wtlib.whitelist");

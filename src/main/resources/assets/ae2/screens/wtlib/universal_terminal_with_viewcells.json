@@ -5,6 +5,11 @@
   ],
   "widgets": {
     "upgrades": {
+      "$comment": "Replaced by scrollingUpgrades",
+      "left": -9999,
+      "top": -9999
+    },
+    "scrollingUpgrades": {
       "$comment": "The upgrade panel found on some screens",
       "right": -2,
       "top": 142

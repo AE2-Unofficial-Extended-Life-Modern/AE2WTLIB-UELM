@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": ["ae2wtlib:wireless_universal_terminal/upgrade_filter"]
+  },
+  "criteria": {
+    "has_wit": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2wtlib:wireless_filter_terminal"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "ae2wtlib:wireless_universal_terminal/upgrade_filter"
+      }
+    }
+  },
+  "requirements": [["has_wit", "has_the_recipe"]]
+}

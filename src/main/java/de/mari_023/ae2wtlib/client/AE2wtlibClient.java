@@ -14,6 +14,8 @@ import de.mari_023.ae2wtlib.wct.magnet_card.config.MagnetMenu;
 import de.mari_023.ae2wtlib.wct.magnet_card.config.MagnetScreen;
 import de.mari_023.ae2wtlib.wet.WETMenu;
 import de.mari_023.ae2wtlib.wet.WETScreen;
+import de.mari_023.ae2wtlib.wft.WFTMenu;
+import de.mari_023.ae2wtlib.wft.WFTScreen;
 
 import appeng.init.client.InitScreens;
 
@@ -22,6 +24,7 @@ public class AE2wtlibClient {
         InitScreens.register(WCTMenu.TYPE, WCTScreen::new, "/screens/wtlib/wireless_crafting_terminal.json");
         InitScreens.register(WETMenu.TYPE, WETScreen::new, "/screens/wtlib/wireless_pattern_encoding_terminal.json");
         InitScreens.register(WATMenu.TYPE, WATScreen::new, "/screens/wtlib/wireless_pattern_access_terminal.json");
+        InitScreens.register(WFTMenu.TYPE, WFTScreen::new, "/screens/wtlib/wireless_filter_terminal.json");
         InitScreens.register(MagnetMenu.TYPE, MagnetScreen::new, "/screens/wtlib/magnet.json");
         InitScreens.register(TrashMenu.TYPE, TrashScreen::new, "/screens/wtlib/trash.json");
 

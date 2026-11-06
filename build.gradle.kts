@@ -1,17 +1,5 @@
-import net.minecraftforge.gradle.common.util.RunConfig
-
-buildscript {
-    repositories {
-        mavenCentral()
-        maven {
-            url = uri("https://plugins.gradle.org/m2/")
-        }
-    }
-}
-
 plugins {
-    id("net.neoforged.gradle") version "[6.0.18,6.2)"
-    id("org.spongepowered.mixin") version "0.7+"
+    id("net.neoforged.moddev.legacyforge") version "2.0.148"
     id("com.diffplug.spotless") version "6.21.0"
     id("maven-publish")
     java
@@ -56,37 +44,32 @@ if (tag != "") {
 }
 
 dependencies {
-    add("minecraft", "net.neoforged:forge:${minecraftVersion}-${forgeVersion}")
+    modImplementation("org.appliedenergistics:guideme:${guidemeVersion}")
+    modImplementation("top.theillusivec4.curios:curios-forge:${curiosVersion}")
+    modImplementation("me.shedaniel.cloth:cloth-config-${modloader}:${clothVersion}")
+    modImplementation("dev.architectury:architectury-${modloader}:${architecturyVersion}")
+    modImplementation("appeng:appliedenergistics2-${modloader}:${ae2Version}")
 
-    implementation(fg.deobf("org.appliedenergistics:guideme:${guidemeVersion}"))
-    implementation(fg.deobf("top.theillusivec4.curios:curios-forge:${curiosVersion}"))
-    implementation(fg.deobf("me.shedaniel.cloth:cloth-config-${modloader}:${clothVersion}"))
-    implementation(fg.deobf("dev.architectury:architectury-${modloader}:${architecturyVersion}"))
-    implementation(fg.deobf("appeng:appliedenergistics2-${modloader}:${ae2Version}") as ExternalModuleDependency) {
-        exclude(group = "mezz.jei")
-        exclude(group = "me.shedaniel")
-    }
-
-    compileOnly(fg.deobf("me.shedaniel:RoughlyEnoughItems-${modloader}:${reiVersion}"))
-    compileOnly(fg.deobf("mezz.jei:jei-${jeiMinecraftVersion}-${modloader}:${jeiVersion}"))
-    compileOnly(fg.deobf("dev.emi:emi-${modloader}:${emiVersion}+${minecraftVersion}:api"))
+    modCompileOnly("me.shedaniel:RoughlyEnoughItems-${modloader}:${reiVersion}")
+    modCompileOnly("mezz.jei:jei-${jeiMinecraftVersion}-${modloader}:${jeiVersion}")
+    modCompileOnly("dev.emi:emi-${modloader}:${emiVersion}+${minecraftVersion}:api")
 
     when (runtimeItemlistMod) {
-        "rei" -> runtimeOnly(fg.deobf("me.shedaniel:RoughlyEnoughItems-${modloader}:${reiVersion}"))
+        "rei" -> modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-${modloader}:${reiVersion}")
 
-        "jei" -> runtimeOnly(fg.deobf("mezz.jei:jei-${jeiMinecraftVersion}-${modloader}:${jeiVersion}"))
+        "jei" -> modRuntimeOnly("mezz.jei:jei-${jeiMinecraftVersion}-${modloader}:${jeiVersion}")
 
         "emi" -> {
-            runtimeOnly(fg.deobf("dev.emi:emi-${modloader}:${emiVersion}+${minecraftVersion}"))
-            //runtimeOnly(fg.deobf("mezz.jei:jei-${jeiMinecraftVersion}-${modloader}:${jeiVersion}"))
+            modRuntimeOnly("dev.emi:emi-${modloader}:${emiVersion}+${minecraftVersion}")
+            //modRuntimeOnly("mezz.jei:jei-${jeiMinecraftVersion}-${modloader}:${jeiVersion}")
         }
     }
 
-    annotationProcessor("org.spongepowered:mixin:0.8.4:processor")
+    annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
     implementation("com.google.code.findbugs:jsr305:3.0.2")
 
     //testing
-    //runtimeOnly(fg.deobf("maven.modrinth:aeinfinitybooster:1.20.1-1.0.0+20"))
+    //modRuntimeOnly("maven.modrinth:aeinfinitybooster:1.20.1-1.0.0+20")
 }
 
 repositories {
@@ -96,8 +79,19 @@ repositories {
         url = uri("https://modmaven.dev/")
         content {
             includeGroup("net.fabricmc.fabric-api")
-            includeGroup("appeng")
             includeGroup("mezz.jei")
+        }
+    }
+    maven {
+        url = uri("https://repo.expandium.net/releases")
+        content {
+            includeGroup("appeng")
+        }
+    }
+    maven {
+        url = uri("https://repo.expandium.net/snapshots")
+        content {
+            includeGroup("appeng")
         }
     }
     maven {
@@ -154,22 +148,31 @@ repositories {
     }
 }
 
-minecraft {
-    mappings("official", minecraftVersion)
-    runs {
-        val config = Action<RunConfig> {
-            properties(mapOf(
-                    "fml.earlyprogresswindow" to "false",
-                    "forge.logging.console.level" to "debug",
-                    "mixin.env.remapRefMap" to "true",
-                    "mixin.env.refMapRemappingFile" to "${projectDir}/build/createSrgToMcp/output.srg"
-            ))
-            workingDirectory = project.file("run").canonicalPath
-            source(sourceSets["main"])
-        }
+val neoForgeDep = "${minecraftVersion}-${forgeVersion}"
 
-        create("client", config)
-        create("server", config)
+legacyForge {
+    enable {
+        neoForgeVersion = neoForgeDep
+    }
+
+    runs {
+        configureEach {
+            systemProperty("fml.earlyprogresswindow", "false")
+            systemProperty("forge.logging.console.level", "debug")
+            gameDirectory.set(project.file("run"))
+        }
+        create("client") {
+            client()
+        }
+        create("server") {
+            server()
+        }
+    }
+
+    mods {
+        create("ae2wtlib") {
+            sourceSet(sourceSets.main.get())
+        }
     }
 }
 
@@ -184,7 +187,6 @@ java {
 
 tasks {
     jar {
-        finalizedBy("reobfJar")
         manifest {
             attributes(mapOf(
                     "MixinConfigs" to "ae2wtlib.mixins.json"
@@ -208,6 +210,27 @@ tasks {
     withType<JavaCompile> {
         options.encoding = "UTF-8"
         options.release.set(17)
+    }
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            groupId = project.property("mavenGroup") as String
+            artifactId = "ae2wtlib"
+            version = project.version as String
+            from(components["java"])
+        }
+    }
+    repositories {
+        maven {
+            name = "expandium"
+            url = uri("https://repo.expandium.net/releases")
+            credentials {
+                username = project.findProperty("MAVEN_USERNAME") as String
+                password = project.findProperty("MAVEN_TOKEN") as String
+            }
+        }
     }
 }
 
